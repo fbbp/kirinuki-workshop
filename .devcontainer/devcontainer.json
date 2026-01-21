@@ -9,7 +9,7 @@
       "version": "3.12"
     }
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && sudo apt-get update && sudo apt-get install -y ffmpeg mecab libmecab-dev mecab-ipadic-utf8 && curl -LsSf https://astral.sh/uv/install.sh | sh && cp /workspaces/*/CLAUDE.md ~/ 2>/dev/null || true && cp /workspaces/*/docs/ai-driven-dev-workshop.md ~/reference.md 2>/dev/null || true",
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && sudo apt-get update && sudo apt-get install -y ffmpeg mecab libmecab-dev mecab-ipadic-utf8 && curl -LsSf https://astral.sh/uv/install.sh | sh && cp /workspaces/*/CLAUDE.md ~/ 2>/dev/null || true && cp /workspaces/*/docs/ai-driven-dev-workshop.md ~/reference.md 2>/dev/null || true && echo 'cat /workspaces/*/welcome-codespaces.txt 2>/dev/null || true' >> ~/.bashrc",
   "customizations": {
     "vscode": {
       "settings": {
