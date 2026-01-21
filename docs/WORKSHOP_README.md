@@ -55,13 +55,18 @@ claude login
 export ANTHROPIC_API_KEY="sk-ant-あなたのキー"
 ```
 
-### 3. サンプル動画を配置
+### 3. 動画を配置
 
-講師から提供されたURLからダウンロード:
+自分のYouTube動画をダウンロード:
+
+1. https://cobalt.meowing.de/ にアクセス
+2. YouTube動画のURLを貼り付け
+3. ダウンロードしたファイルをCodespacesにアップロード
 
 ```bash
 mkdir -p ~/videos ~/output
-curl -o ~/videos/sample.mp4 "講師から提供されたURL"
+# ダウンロードした動画を ~/videos/ に配置
+mv ~/Downloads/動画ファイル.mp4 ~/videos/sample.mp4
 ```
 
 ### 4. Claude Codeを起動
