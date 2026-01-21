@@ -23,10 +23,32 @@ brew install orbstack
 3. 左メニュー「API Keys」→「Create API Key」
 4. キーをコピーして安全な場所に保存
 
+### （任意）Anthropic APIキーを取得
+
+Claude Codeを使うにはAnthropicのAPIキーが必要です。
+
+- **Claude Max/Proプランをお持ちの方**: コンテナ内で `claude login` を実行
+- **APIキーをお持ちの方**: 環境変数 `ANTHROPIC_API_KEY` に設定
+- **お持ちでない方**: 当日、講師からゲストパスを案内します
+
 ### 3. 作業ディレクトリを作成
 
 ```bash
 mkdir -p ~/workshop/{videos,output}
+```
+
+### 4. Dockerイメージを事前ダウンロード（推奨）
+
+イメージサイズが約2GBあるため、事前にダウンロードしておくとスムーズです。
+
+```bash
+docker pull ghcr.io/fbbp/kirinuki-workshop:latest
+```
+
+ダウンロード完了の確認:
+
+```bash
+docker images | grep kirinuki-workshop
 ```
 
 ---

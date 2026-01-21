@@ -64,12 +64,16 @@ WORKDIR /home/workshop
 # CLAUDE.md と参考資料をコピー
 COPY --chown=workshop:workshop CLAUDE.md /home/workshop/CLAUDE.md
 COPY --chown=workshop:workshop docs/ai-driven-dev-workshop.md /home/workshop/reference.md
+COPY --chown=workshop:workshop welcome.sh /home/workshop/welcome.sh
 
-# ディレクトリ作成
-RUN mkdir -p /home/workshop/output
+# ディレクトリ作成 & ウェルカムメッセージ設定
+RUN mkdir -p /home/workshop/output \
+    && chmod +x /home/workshop/welcome.sh \
+    && echo 'source ~/welcome.sh' >> /home/workshop/.bashrc
 
 # 環境変数
 ENV GROQ_API_KEY=""
+ENV ANTHROPIC_API_KEY=""
 
 # デフォルトシェル
 CMD ["/bin/bash"]

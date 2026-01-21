@@ -55,11 +55,28 @@
 ## Groq API Usage
 
 ### Whisper (ASR)
+
+**重要: ファイルサイズ制限 25MB**
+
+動画ファイルをそのまま送ると25MBを超えてエラーになる。対処法:
+
+1. ffmpegで音声だけ抽出（サイズ大幅削減）
+2. 長い場合はさらにチャンク分割
+
+```bash
+# 音声抽出（MP4 → WAVまたはMP3）
+ffmpeg -i /videos/sample.mp4 -vn -acodec pcm_s16le -ar 16000 -ac 1 audio.wav
+
+# 分割が必要な場合（3分ごと）
+ffmpeg -i audio.wav -f segment -segment_time 180 -c copy chunk_%03d.wav
+```
+
 ```python
 from groq import Groq
 client = Groq()
 
-with open("video.mp4", "rb") as f:
+# 音声ファイルを送信（動画ではなく）
+with open("audio.wav", "rb") as f:
     transcription = client.audio.transcriptions.create(
         file=f,
         model="whisper-large-v3-turbo",
