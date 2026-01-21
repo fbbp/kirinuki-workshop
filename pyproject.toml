@@ -1,0 +1,14 @@
+[project]
+name = "kirinuki"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mlx-embeddings>=0.0.5",
+    "parakeet-mlx>=0.5.0",
+    "moviepy>=2.0.0",
+    "pillow>=10.0.0",
+    "mecab-python3>=1.0.0",
+    "unidic-lite>=1.0.8",
+]

@@ -1,0 +1,11 @@
+services:
+  workshop:
+    image: ghcr.io/fbbp/kirinuki-workshop:latest
+    stdin_open: true
+    tty: true
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - ./videos:/videos:ro
+      - ./output:/output
