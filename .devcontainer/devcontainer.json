@@ -1,0 +1,24 @@
+{
+  "name": "AI Workshop",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    }
+  },
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && sudo apt-get update && sudo apt-get install -y ffmpeg mecab libmecab-dev mecab-ipadic-utf8 && curl -LsSf https://astral.sh/uv/install.sh | sh && cp /workspaces/*/CLAUDE.md ~/ 2>/dev/null || true && cp /workspaces/*/docs/ai-driven-dev-workshop.md ~/reference.md 2>/dev/null || true",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "remoteEnv": {
+    "GROQ_API_KEY": "${localEnv:GROQ_API_KEY}",
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
+  }
+}
