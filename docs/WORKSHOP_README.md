@@ -4,17 +4,10 @@ YouTube長尺動画から縦型ショート動画を自動生成するパイプ�
 
 ## 事前準備
 
-### 1. OrbStackをインストール
+### 1. GitHubアカウント
 
-macOS用の軽量Dockerランタイムです。
-
-```bash
-# Homebrewでインストール
-brew install orbstack
-
-# または公式サイトからダウンロード
-# https://orbstack.dev/
-```
+GitHubアカウントが必要です（無料でOK）。
+https://github.com/
 
 ### 2. Groq APIキーを取得
 
@@ -23,154 +16,126 @@ brew install orbstack
 3. 左メニュー「API Keys」→「Create API Key」
 4. キーをコピーして安全な場所に保存
 
-### （任意）Anthropic APIキーを取得
+### 3. Anthropic APIキー（Claude Code用）
 
 Claude Codeを使うにはAnthropicのAPIキーが必要です。
 
-- **Claude Max/Proプランをお持ちの方**: コンテナ内で `claude login` を実行
-- **APIキーをお持ちの方**: 環境変数 `ANTHROPIC_API_KEY` に設定
+- **Claude Max/Proプランをお持ちの方**: Codespaces内で `claude login` を実行
+- **APIキーをお持ちの方**: 環境変数に設定
 - **お持ちでない方**: 当日、講師からゲストパスを案内します
-
-### 3. 作業ディレクトリを作成
-
-```bash
-mkdir -p ~/workshop/{videos,output}
-```
-
-### 4. Dockerイメージを事前ダウンロード（推奨）
-
-イメージサイズが約2GBあるため、事前にダウンロードしておくとスムーズです。
-
-```bash
-docker pull ghcr.io/fbbp/kirinuki-workshop:latest
-```
-
-ダウンロード完了の確認:
-
-```bash
-docker images | grep kirinuki-workshop
-```
 
 ---
 
-## 当日の手順
+## 当日の手順（GitHub Codespaces）
 
-### 1. サンプル動画を配置
+### 1. Codespacesを起動
 
-講師から提供されたURLからダウンロードし、`~/workshop/videos/` に配置してください。
+1. https://github.com/fbbp/kirinuki-workshop にアクセス
+2. 緑の `Code` ボタンをクリック
+3. `Codespaces` タブを選択
+4. `Create codespace on main` をクリック
+
+環境構築に数分かかります。完了するとVS Codeがブラウザで開きます。
+
+### 2. APIキーを設定
+
+ターミナルで:
 
 ```bash
-# 例
-curl -o ~/workshop/videos/sample.mp4 "講師から提供されたURL"
+export GROQ_API_KEY="gsk_あなたのキー"
 ```
 
-### 2. コンテナを起動
+Claude Codeの認証:
 
 ```bash
-docker run -it --rm \
-  -e GROQ_API_KEY="gsk_あなたのキー" \
-  -e ANTHROPIC_API_KEY="sk-ant-あなたのキー" \
-  -v ~/workshop/videos:/videos:ro \
-  -v ~/workshop/output:/output \
-  ghcr.io/fbbp/kirinuki-workshop:latest
+# Max/Proプランの場合
+claude login
+
+# APIキーの場合
+export ANTHROPIC_API_KEY="sk-ant-あなたのキー"
 ```
 
-**オプション解説:**
-- `-e GROQ_API_KEY` : Groq APIキーを設定
-- `-e ANTHROPIC_API_KEY` : Claude Code用のAPIキー
-- `-v ~/workshop/videos:/videos:ro` : 入力動画（読み取り専用）
-- `-v ~/workshop/output:/output` : 出力先
+### 3. サンプル動画を配置
 
-### 3. Claude Codeを起動
+講師から提供されたURLからダウンロード:
 
-コンテナ内で:
+```bash
+mkdir -p ~/videos ~/output
+curl -o ~/videos/sample.mp4 "講師から提供されたURL"
+```
+
+### 4. Claude Codeを起動
 
 ```bash
 claude
 ```
 
-### 4. 開発開始
+### 5. 開発開始
 
 Claude Codeに話しかけて開発を進めます:
 
 ```
-> /videos/sample.mp4 から縦型ショート動画を作りたい。
+> ~/videos/sample.mp4 から縦型ショート動画を作りたい。
 > Groq APIを使ってまず文字起こしをしてほしい。
-```
-
----
-
-## docker-compose を使う場合
-
-`docker-compose.yml` を使うとより簡単です。
-
-### セットアップ
-
-```bash
-# .envファイルを作成
-cat > ~/workshop/.env << 'EOF'
-GROQ_API_KEY=gsk_あなたのキー
-ANTHROPIC_API_KEY=sk-ant-あなたのキー
-EOF
-```
-
-### 起動
-
-```bash
-cd ~/workshop
-docker compose up -d
-docker compose exec workshop bash
-
-# コンテナ内で
-claude
-```
-
-### 終了
-
-```bash
-docker compose down
-```
-
----
-
-## ファイル構成
-
-```
-~/workshop/
-├── videos/           # 入力動画（読み取り専用）
-│   └── sample.mp4
-├── output/           # 生成された動画
-│   └── short_001.mp4
-├── .env              # APIキー（docker-compose用）
-└── docker-compose.yml
 ```
 
 ---
 
 ## トラブルシューティング
 
-### コンテナが起動しない
+### Codespacesが起動しない
 
-```bash
-# OrbStackが起動しているか確認
-orb status
-
-# イメージを再取得
-docker pull ghcr.io/fbbp/kirinuki-workshop:latest
-```
+- ブラウザを更新してみる
+- 別のブラウザで試す
+- GitHubにログインしているか確認
 
 ### APIキーエラー
 
 ```bash
-# 環境変数が設定されているか確認（コンテナ内で）
+# 環境変数が設定されているか確認
 echo $GROQ_API_KEY
 echo $ANTHROPIC_API_KEY
 ```
 
-### 出力ファイルが見えない
+### Claude Codeが動かない
 
-ホストの `~/workshop/output/` を確認してください。
-Finder または `ls ~/workshop/output/` で確認できます。
+```bash
+# 再インストール
+npm install -g @anthropic-ai/claude-code
+
+# 認証確認
+claude login
+```
+
+---
+
+## ローカル環境で実行したい場合（オプション）
+
+Codespacesではなくローカルで実行したい場合は、自分でDockerイメージをビルドできます。
+
+### 前提条件
+
+- Docker（OrbStack推奨）がインストール済み
+- リポジトリをクローン済み
+
+### ビルド & 実行
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/fbbp/kirinuki-workshop.git
+cd kirinuki-workshop
+
+# イメージをビルド
+docker build -t kirinuki-workshop .
+
+# コンテナを起動
+docker run -it --rm \
+  -e GROQ_API_KEY="gsk_あなたのキー" \
+  -e ANTHROPIC_API_KEY="sk-ant-あなたのキー" \
+  -v ~/workshop/videos:/videos:ro \
+  -v ~/workshop/output:/output \
+  kirinuki-workshop
+```
 
 ---
 
@@ -178,7 +143,7 @@ Finder または `ls ~/workshop/output/` で確認できます。
 
 - [Groq API ドキュメント](https://console.groq.com/docs)
 - [Claude Code](https://docs.anthropic.com/claude-code)
-- [OrbStack](https://docs.orbstack.dev/)
+- [GitHub Codespaces](https://docs.github.com/codespaces)
 
 ---
 
